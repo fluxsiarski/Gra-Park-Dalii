@@ -43,6 +43,17 @@ export const store = {
     document.dispatchEvent(new CustomEvent('treats'));
   },
 
+  // Wydaje smaczki (np. na jedzenie w Domku Dalii). Nie zmienia totalEarned.
+  // Zwraca true, jeśli stać gracza; false, gdy za mało.
+  spendTreats(n) {
+    if (n <= 0) return true;
+    if (state.treats < n) return false;
+    state.treats -= n;
+    save();
+    document.dispatchEvent(new CustomEvent('treats'));
+    return true;
+  },
+
   saveLook(name, items) {
     const look = {
       id: 'L' + Date.now().toString(36),

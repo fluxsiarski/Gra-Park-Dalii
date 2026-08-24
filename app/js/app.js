@@ -8,6 +8,7 @@ import { initPrzy } from './przymierzalnia.js';
 import { initMemory } from './memory.js';
 import { initIntro } from './game-intro.js';
 import { initEarth } from './game-earth.js';
+import { initDaliaCare } from './dalia-care.js';
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -40,7 +41,7 @@ export function go(id) {
 
 /* ---------- chipy smaczków ---------- */
 export function refreshTreats() {
-  ['hub', 'spacer'].forEach(id => {
+  ['hub', 'spacer', 'care'].forEach(id => {
     const el = $('#treats-' + id);
     if (el) el.textContent = store.s.treats;
   });
@@ -252,6 +253,7 @@ function boot() {
   initMemory({ toast, onScreen });
   initIntro({ onScreen, go });
   initEarth({ onScreen });
+  initDaliaCare({ toast, onScreen, go });
 
   document.addEventListener('treats', refreshTreats);
   startDaliaIdle();

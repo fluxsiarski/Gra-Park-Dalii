@@ -5,3 +5,6 @@
 
 tools/e2e/node_modules/
 
+# Tymczasowe pliki pipeline'u rigu Dalii (regenerowalne przez build-dalia-rig.sh)
+tools/rig-src/_work/
+

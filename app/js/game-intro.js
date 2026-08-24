@@ -832,7 +832,7 @@ function finish() {
 
 function toHub() {
   clearTimeout(finishTimer);
-  go('screen-hub');
+  go('screen-dalia-care');
 }
 
 /* ---------- sterowanie ---------- */

@@ -1,0 +1,427 @@
+/* ====== Domek Dalii (Pou) — izolowany styl prototypu ====== */
+
+/* Wejście z huba: drugi przycisk w hub-nav */
+.hub-care-btn {
+  background: linear-gradient(135deg, #FBE7D2, #F3D7B4);
+}
+.hub-care-ico {
+  background: #E9A85B !important;
+}
+
+/* Ekran */
+#screen-dalia-care {
+  background: #F3E6D2;
+}
+.care-room {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Tła pokojów */
+.care-room-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transition: background .5s ease;
+  background:
+    radial-gradient(120% 60% at 50% 0%, #FFF4E2 0%, #F3E1C4 55%, #E7CFA6 100%);
+}
+.care-room[data-room="living"] .care-room-bg {
+  background:
+    linear-gradient(180deg, #FBEBCF 0%, #F3D9B4 46%, #C99B6B 46%, #B98A5A 100%);
+}
+.care-room[data-room="kitchen"] .care-room-bg {
+  background:
+    linear-gradient(180deg, #EFF6E8 0%, #DCEBCB 44%, #C3D3A8 44%, #B4C795 100%);
+}
+.care-room[data-room="bath"] .care-room-bg {
+  background:
+    linear-gradient(180deg, #E4F4FA 0%, #CBEAF4 46%, #A8D8E8 46%, #93CCE0 100%);
+}
+.care-room[data-room="bedroom"] .care-room-bg {
+  background:
+    linear-gradient(180deg, #EAE3F5 0%, #D6C9EC 46%, #B7A6D8 46%, #A791CD 100%);
+}
+
+/* dekoracyjne elementy pokoi */
+.care-room-bg::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  top: 44%;
+  height: 3px;
+  background: rgba(74, 52, 42, .12);
+}
+
+/* Nocna zasłona (sypialnia) */
+.care-night-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: radial-gradient(90% 60% at 50% 42%, rgba(20, 14, 40, .15), rgba(10, 6, 26, .82));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .6s ease;
+}
+.care-night-veil.show { opacity: 1; }
+
+/* Górny pasek */
+.care-top {
+  position: relative;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 4px;
+}
+.care-home-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFF6E9;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 800;
+  color: var(--choco);
+  box-shadow: var(--shadow);
+  flex: none;
+}
+.care-treats {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFF6E9;
+  border-radius: 999px;
+  padding: 6px 14px 6px 10px;
+  font-weight: 800;
+  color: var(--choco);
+  box-shadow: var(--shadow);
+}
+.care-treats svg { width: 26px; height: 16px; }
+.care-room-name {
+  margin-left: auto;
+  font-weight: 800;
+  color: var(--ink);
+  background: rgba(255, 246, 233, .8);
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+/* Paski potrzeb */
+.care-needs {
+  position: relative;
+  z-index: 6;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 12px;
+  padding: 10px 16px 4px;
+}
+.care-need {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.care-need-ico { font-size: 18px; flex: none; }
+.care-need-bar {
+  position: relative;
+  flex: 1;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(74, 52, 42, .16);
+  overflow: hidden;
+}
+.care-need-bar b {
+  position: absolute;
+  inset: 0;
+  width: 50%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #9FB07F, #7C8F62);
+  transition: width .45s ease, background .3s ease;
+}
+.care-need[data-need="satiety"] .care-need-bar b { background: linear-gradient(90deg, #E9B25B, #D9903F); }
+.care-need[data-need="cleanliness"] .care-need-bar b { background: linear-gradient(90deg, #7FC6DE, #4FA6C6); }
+.care-need[data-need="happiness"] .care-need-bar b { background: linear-gradient(90deg, #E8A0B0, #D96C7F); }
+.care-need[data-need="energy"] .care-need-bar b { background: linear-gradient(90deg, #C4B15E, #A89230); }
+.care-need.is-low .care-need-bar b {
+  background: linear-gradient(90deg, #E07A5F, #C74D3A) !important;
+  animation: careLowPulse 1s ease-in-out infinite;
+}
+@keyframes careLowPulse { 50% { opacity: .55; } }
+
+/* Scena z Dalią */
+.care-stage {
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+}
+.care-fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 7;
+}
+.care-dirt {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .4s ease;
+  background-image:
+    radial-gradient(circle at 46% 52%, rgba(90, 70, 40, .55) 0 5px, transparent 6px),
+    radial-gradient(circle at 54% 60%, rgba(90, 70, 40, .5) 0 6px, transparent 7px),
+    radial-gradient(circle at 50% 46%, rgba(110, 84, 48, .5) 0 4px, transparent 5px),
+    radial-gradient(circle at 58% 50%, rgba(90, 70, 40, .45) 0 5px, transparent 6px),
+    radial-gradient(circle at 43% 62%, rgba(110, 84, 48, .45) 0 4px, transparent 5px);
+  background-repeat: no-repeat;
+  mix-blend-mode: multiply;
+}
+
+.care-dalia-wrap {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* Rig Dalii: kontener + pojedynczy sprite + cień. Ruch robi JS (transform). */
+.care-rig {
+  position: relative;
+  width: min(72vw, 300px);
+  height: min(72vw, 300px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  cursor: pointer;
+}
+.care-rig .rig-dog {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: 50% 100%;
+  transform-origin: 50% 92%;
+  will-change: transform;
+  filter: drop-shadow(0 10px 10px rgba(74, 52, 42, .22));
+  -webkit-user-drag: none;
+}
+.care-rig .rig-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 4%;
+  transform: translateX(-50%);
+  width: 52%;
+  height: 20px;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(74, 52, 42, .32), transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+.care-rig .rig-dog { position: relative; z-index: 1; }
+.care-zzz {
+  position: absolute;
+  top: 2%;
+  right: 6%;
+  font-family: 'Caveat', cursive;
+  font-size: 30px;
+  font-weight: 700;
+  color: #6B5240;
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+.care-zzz.show { opacity: .9; animation: careZzz 2.4s ease-in-out infinite; }
+@keyframes careZzz {
+  0%, 100% { transform: translateY(0); opacity: .5; }
+  50% { transform: translateY(-8px); opacity: 1; }
+}
+.care-bubble {
+  position: absolute;
+  top: -6%;
+  left: 50%;
+  transform: translate(-50%, 8px) scale(.8);
+  background: #FFF6E9;
+  color: var(--choco);
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.care-bubble.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
+.care-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -6px; left: 50%;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-top-color: #FFF6E9;
+}
+
+/* Animacje Dalii są sterowane w JS (dalia-rig.js) przez transform na .rig-dog. */
+
+/* okruszki / piana / krople */
+.care-crumb {
+  position: absolute;
+  bottom: 26%;
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  background: #B9823F;
+  animation: careCrumb .85s ease-out forwards;
+}
+@keyframes careCrumb {
+  0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+  100% { transform: translate(var(--dx), 60px) rotate(180deg); opacity: 0; }
+}
+.care-foam {
+  position: absolute;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff, #E3F0F5 70%);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .6);
+  transform: translate(-50%, -50%) scale(var(--s, 1));
+  animation: careFoam 2.6s ease forwards;
+}
+@keyframes careFoam {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.2); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -140%) scale(var(--s, 1)); }
+}
+.care-drop {
+  position: absolute;
+  top: 20%;
+  width: 6px; height: 14px;
+  border-radius: 0 0 6px 6px;
+  background: #7FC6DE;
+  animation: careDrop 1s ease-in forwards;
+}
+@keyframes careDrop {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(200px); opacity: 0; }
+}
+
+/* Narzędzia per pokój */
+.care-tools {
+  position: relative;
+  z-index: 6;
+  padding: 4px 14px 8px;
+  min-height: 92px;
+}
+.care-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.care-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: #FFF6E9;
+  border-radius: 18px;
+  padding: 10px 14px;
+  min-width: 78px;
+  box-shadow: var(--shadow);
+  font-weight: 700;
+  color: var(--ink-soft);
+  transition: transform .12s ease;
+}
+.care-action span { font-size: 26px; }
+.care-action small { font-size: 12px; }
+.care-action:active { transform: scale(.94); }
+.care-action-wide { min-width: 120px; }
+
+.care-shelf {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.care-food {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: #FFF6E9;
+  border-radius: 14px;
+  padding: 8px 4px 6px;
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  transition: transform .12s ease;
+}
+.care-food:active { transform: scale(.93); }
+.care-food img {
+  width: 44px; height: 44px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.care-food strong { font-size: 11px; }
+.care-food-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--choco);
+}
+.care-food-cost svg { width: 18px; height: 11px; }
+
+.care-drag-ghost {
+  position: fixed;
+  z-index: 999;
+  width: 60px; height: 60px;
+  object-fit: cover;
+  border-radius: 12px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .3));
+}
+
+/* Dolna nawigacja pokojami */
+.care-nav {
+  position: relative;
+  z-index: 6;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
+  background: rgba(255, 246, 233, .92);
+  box-shadow: 0 -6px 18px rgba(74, 52, 42, .12);
+}
+.care-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border-radius: 14px;
+  color: var(--ink-soft);
+  font-weight: 700;
+  transition: background .18s ease, transform .12s ease;
+}
+.care-nav-btn span { font-size: 22px; }
+.care-nav-btn small { font-size: 11px; }
+.care-nav-btn.is-active {
+  background: linear-gradient(135deg, #F3D7B4, #E9A85B);
+  color: var(--choco);
+}
+.care-nav-btn:active { transform: scale(.94); }
+
+.hidden { display: none !important; }
+
+/* Redukcja ruchu (rig sam wyłącza transformacje w JS) */
+@media (prefers-reduced-motion: reduce) {
+  .care-zzz.show,
+  .care-need.is-low .care-need-bar b {
+    animation: none !important;
+  }
+  .care-rig .rig-dog { transition: none; }
+}

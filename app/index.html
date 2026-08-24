@@ -34,6 +34,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Caveat:wght@600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dalia-care.css">
 </head>
 <body>
 
@@ -104,6 +105,14 @@
   </div>
 
   <nav class="hub-nav">
+    <button class="hub-salon-btn hub-home-btn" data-go="screen-dalia-care">
+      <span class="hub-salon-ico hub-care-ico">🏡</span>
+      <span>
+        <strong>Wróć do Domku</strong>
+        <small>karm, myj i przytulaj Dalię</small>
+      </span>
+      <span class="hub-salon-arrow">‹</span>
+    </button>
     <button class="hub-salon-btn" data-go="screen-salon">
       <span class="hub-salon-ico">★</span>
       <span>
@@ -126,6 +135,70 @@
       </div>
       <div class="place-grid" id="place-grid"></div>
     </div>
+  </div>
+</section>
+
+<!-- ======== DOMEK DALII (Pou) ======== -->
+<section class="screen" id="screen-dalia-care">
+  <div class="care-room" id="care-room" data-room="living">
+    <div class="care-room-bg" id="care-room-bg" aria-hidden="true"></div>
+    <div class="care-night-veil" id="care-night-veil" aria-hidden="true"></div>
+
+    <header class="care-top">
+      <div class="care-home-badge" aria-hidden="true">🏡 Domek Dalii</div>
+      <div class="care-treats" role="status" aria-label="Smaczki">
+        <svg viewBox="0 0 100 60" aria-hidden="true"><use href="#i-treat"/></svg>
+        <span id="treats-care">0</span>
+      </div>
+      <div class="care-room-name" id="care-room-name">Salon</div>
+    </header>
+
+    <div class="care-needs" id="care-needs" aria-label="Potrzeby Dalii">
+      <div class="care-need" data-need="satiety">
+        <span class="care-need-ico">🍖</span>
+        <span class="care-need-bar"><b id="bar-satiety"></b></span>
+      </div>
+      <div class="care-need" data-need="cleanliness">
+        <span class="care-need-ico">🫧</span>
+        <span class="care-need-bar"><b id="bar-cleanliness"></b></span>
+      </div>
+      <div class="care-need" data-need="happiness">
+        <span class="care-need-ico">💛</span>
+        <span class="care-need-bar"><b id="bar-happiness"></b></span>
+      </div>
+      <div class="care-need" data-need="energy">
+        <span class="care-need-ico">⚡</span>
+        <span class="care-need-bar"><b id="bar-energy"></b></span>
+      </div>
+    </div>
+
+    <div class="care-stage" id="care-stage">
+      <div class="care-fx" id="care-fx" aria-hidden="true"></div>
+      <div class="care-dirt" id="care-dirt" aria-hidden="true"></div>
+      <div class="care-dalia-wrap" id="care-dalia-wrap">
+        <div class="care-rig" id="care-rig"></div>
+        <div class="care-zzz" id="care-zzz">z z z</div>
+        <div class="care-bubble" id="care-bubble" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <!-- Warstwy narzędzi per pokój -->
+    <div class="care-tools" id="care-tools"></div>
+
+    <nav class="care-nav" id="care-nav" aria-label="Pokoje">
+      <button class="care-nav-btn is-active" data-room="living" type="button">
+        <span>🛋️</span><small>Salon</small>
+      </button>
+      <button class="care-nav-btn" data-room="kitchen" type="button">
+        <span>🍽️</span><small>Kuchnia</small>
+      </button>
+      <button class="care-nav-btn" data-room="bath" type="button">
+        <span>🛁</span><small>Łazienka</small>
+      </button>
+      <button class="care-nav-btn" data-room="bedroom" type="button">
+        <span>🌙</span><small>Sypialnia</small>
+      </button>
+    </nav>
   </div>
 </section>
 
@@ -187,7 +260,7 @@
 <!-- ======== SALON GIER ======== -->
 <section class="screen" id="screen-salon">
   <header class="topbar">
-    <button class="btn-back" data-go="screen-hub" aria-label="Powrót">&#8592;</button>
+    <button class="btn-back" data-go="screen-dalia-care" aria-label="Powrót">&#8592;</button>
     <h2>Salon Gier</h2>
     <div class="salon-head-star" aria-hidden="true">★</div>
   </header>
@@ -380,7 +453,7 @@
 <!-- ======== PRZYMIERZALNIA ======== -->
 <section class="screen" id="screen-przy">
   <header class="topbar">
-    <button class="btn-back" data-go="screen-hub" aria-label="Powrót">&#8592;</button>
+    <button class="btn-back" data-go="screen-dalia-care" aria-label="Powrót">&#8592;</button>
     <h2>Przymierzalnia</h2>
     <button class="btn-icon" id="btn-gallery" aria-label="Galeria looków">
       <svg viewBox="0 0 100 100"><rect x="16" y="16" width="30" height="30" rx="7" fill="#C9A177"/><rect x="54" y="16" width="30" height="30" rx="7" fill="#C9A177"/><rect x="16" y="54" width="30" height="30" rx="7" fill="#C9A177"/><rect x="54" y="54" width="30" height="30" rx="7" fill="#D96C5F"/></svg>
