@@ -2,7 +2,7 @@
 // CacheStorage jest wspólny dla całej domeny (np. zielvik.github.io), dlatego
 // usuwamy wyłącznie cache należące do tej gry.
 const CACHE_PREFIX = 'gra-park-dalii-';
-const CACHE = `${CACHE_PREFIX}v23`;
+const CACHE = `${CACHE_PREFIX}v24`;
 const ASSETS = [
   './', './index.html', './manifest.json',
   './css/style.css',

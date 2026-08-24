@@ -5,6 +5,8 @@ import { DALIA } from './data.js';
 const $ = (s) => document.querySelector(s);
 
 const COLS = 13, ROWS = 17;
+const SWIPE_THRESHOLD = 14;
+const MAX_TURN_RESPONSE_MS = 55;
 let cv, ctx, W = 390, H = 700, cell = 20, dpr = 1;
 let board = { x: 0, y: 0, w: 0, h: 0, radius: 22 };
 
@@ -602,12 +604,14 @@ function bindInput() {
     if (!tStart) return;
     const dx = e.touches[0].clientX - tStart.x;
     const dy = e.touches[0].clientY - tStart.y;
-    if (Math.abs(dx) < 24 && Math.abs(dy) < 24) return;
+    if (Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) return;
     pushDir(Math.abs(dx) > Math.abs(dy)
       ? { x: Math.sign(dx), y: 0 }
       : { x: 0, y: Math.sign(dy) });
     tStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   }, { passive: true });
+  cv.addEventListener('touchend', () => { tStart = null; }, { passive: true });
+  cv.addEventListener('touchcancel', () => { tStart = null; }, { passive: true });
 
   window.addEventListener('keydown', e => {
     if ((e.key === 'p' || e.key === 'P' || e.key === 'Escape') && running) {
@@ -633,7 +637,16 @@ function bindInput() {
 
 function pushDir(d) {
   if (!running || paused) return;
-  if (nextDirs.length < 3) nextDirs.push(d);
+  const lastDir = nextDirs[nextDirs.length - 1] || dir;
+  const repeatsLastDir = d.x === lastDir.x && d.y === lastDir.y;
+  const reversesLastDir = d.x === -lastDir.x && d.y === -lastDir.y;
+  if (repeatsLastDir || reversesLastDir || nextDirs.length >= 2) return;
+
+  const isFirstQueuedTurn = nextDirs.length === 0;
+  nextDirs.push(d);
+  if (isFirstQueuedTurn) {
+    acc = Math.max(acc, tickMs - MAX_TURN_RESPONSE_MS);
+  }
 }
 
 export function initSpacer({ onScreen }) {
