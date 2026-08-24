@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Park Dalii</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#F6EADB">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Park Dalii">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Caveat:wght@600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ======== INTRO — retro wyścig ======== -->
+<section class="screen" id="screen-intro">
+  <canvas id="intro-canvas"></canvas>
+  <div class="crt" aria-hidden="true"></div>
+
+  <button class="btn-skip hidden" id="btn-intro-skip">POMIŃ &#187;</button>
+
+  <div class="intro-title" id="intro-title">
+    <p class="it-present">Gra: Park Dalii</p>
+    <h1 class="it-name">dla Oliwii aka<br>super pani stylistki</h1>
+    <div class="veh-pick" id="veh-pick">
+      <button class="veh-card selected" data-veh="bus">
+        <img class="veh-prev" src="assets/img/vehicles/vw-t1.jpeg" alt="VW T1">
+        <span class="veh-name">VW T1</span>
+      </button>
+      <button class="veh-card" data-veh="train">
+        <img class="veh-prev" src="assets/img/vehicles/kd-impuls.jpeg" alt="KD Impuls">
+        <span class="veh-name">KD IMPULS</span>
+      </button>
+    </div>
+    <button class="btn-start" id="btn-intro-start"><span class="blink">&#9658;</span> START</button>
+    <p class="it-hint">przeciągaj palcem<br>albo strzałki &larr; &rarr;</p>
+  </div>
+
+  <div class="intro-finish hidden" id="intro-finish">
+    <p class="if-big">KONIEC TRASY!</p>
+    <p class="if-sub">wjeżdżasz do parku&hellip;</p>
+  </div>
+</section>
+
+<!-- ======== HUB ======== -->
+<section class="screen" id="screen-hub">
+  <!-- park rysowany SVG -->
+  <div class="park" id="park-scene"></div>
+  <div class="park-photo-layer hidden" id="park-photo-layer" aria-hidden="true">
+    <div class="park-photo-blur" id="park-photo-blur"></div>
+    <img class="park-photo" id="park-photo" alt="">
+    <div class="park-photo-veil"></div>
+  </div>
+
+  <div class="hub-top">
+    <div class="brand">
+      <span class="brand-title">Park Dalii</span>
+    </div>
+    <div class="hub-actions">
+      <div class="chip chip-treats">
+        <svg viewBox="0 0 100 60"><use href="#i-treat"/></svg>
+        <span id="treats-hub">0</span>
+      </div>
+      <button class="hub-place-btn" id="hub-place-btn" type="button" aria-label="Zmień tło parku">
+        <span class="hub-place-ico" id="hub-place-ico" aria-hidden="true"></span>
+        <span>Miejsce</span>
+      </button>
+      <button class="hub-earth-btn" data-go="screen-earth" aria-label="Otwórz globus i znajdź Rynek Trzebnica">
+        <span class="hub-earth-globe" aria-hidden="true"></span>
+        <span>Trzebnica</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="dalia-stage">
+    <div class="dalia-shadow"></div>
+    <img id="dalia-main" class="dalia-idle" src="assets/img/dalia/sit-front.png" alt="Dalia">
+    <div class="dalia-zzz" id="dalia-zzz">zzz</div>
+  </div>
+
+  <nav class="hub-nav">
+    <button class="hub-salon-btn" data-go="screen-salon">
+      <span class="hub-salon-ico">★</span>
+      <span>
+        <strong>Salon Gier</strong>
+        <small>wybierz zabawę z Dalią</small>
+      </span>
+      <span class="hub-salon-arrow">›</span>
+    </button>
+  </nav>
+
+  <div class="place-panel hidden" id="place-panel" role="dialog" aria-modal="true" aria-labelledby="place-panel-title">
+    <button class="place-panel-backdrop" id="place-panel-backdrop" type="button" aria-label="Zamknij wybór tła"></button>
+    <div class="place-sheet">
+      <div class="place-head">
+        <div>
+          <span>TŁO PARKU</span>
+          <h3 id="place-panel-title">Wybierz miejsce</h3>
+        </div>
+        <button class="btn-icon" id="place-panel-close" type="button" aria-label="Zamknij">&#10005;</button>
+      </div>
+      <div class="place-grid" id="place-grid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== ZIEMIA / TRZEBNICA ======== -->
+<section class="screen" id="screen-earth">
+  <div class="earth-space" id="earth-space">
+    <canvas id="earth-canvas" aria-label="Interaktywny globus 3D. Przeciągnij, aby obrócić, i uszczypnij, aby przybliżyć."></canvas>
+    <div class="earth-vignette" aria-hidden="true"></div>
+
+    <header class="earth-topbar">
+      <button class="earth-round-btn" data-go="screen-hub" aria-label="Powrót do Parku Dalii">&#8592;</button>
+      <div class="earth-heading">
+        <span>WIDOK Z KOSMOSU</span>
+        <h2>Znajdź Trzebnicę</h2>
+      </div>
+      <button class="earth-round-btn earth-locate-btn" id="earth-locate" aria-label="Pokaż Rynek Trzebnica">
+        <span aria-hidden="true"></span>
+      </button>
+    </header>
+
+    <button class="earth-marker hidden" id="earth-marker" type="button" aria-label="Odtwórz lot do Rynku w Trzebnicy">
+      <span class="earth-marker-pulse" aria-hidden="true"></span>
+      <span class="earth-marker-card">
+        <strong>Rynek Trzebnica</strong>
+        <small>51.3072° N · 17.0565° E</small>
+        <span>Dotknij, aby rozpocząć lot</span>
+      </span>
+    </button>
+
+    <div class="earth-loader" id="earth-loader">
+      <span></span>
+      <p>Ładuję Ziemię…</p>
+    </div>
+
+    <div class="earth-tip">
+      <span aria-hidden="true">↔</span>
+      Obracaj · przybliżaj dwoma palcami
+    </div>
+    <small class="earth-credit">Ziemia: NASA Blue Marble</small>
+  </div>
+
+  <div class="earth-video-modal hidden" id="earth-video-modal" role="dialog" aria-modal="true" aria-labelledby="earth-video-title">
+    <div class="earth-video-sheet">
+      <div class="earth-video-head">
+        <div>
+          <span>51.3072° N · 17.0565° E</span>
+          <h3 id="earth-video-title">Rynek Trzebnica</h3>
+        </div>
+        <button class="earth-video-close" id="earth-video-close" aria-label="Zamknij film">&#10005;</button>
+      </div>
+      <video id="earth-video" controls playsinline preload="metadata">
+        <source src="assets/video/trzebnica-rynek-camera.mp4" type="video/mp4">
+      </video>
+      <p>Lot z orbity prosto nad trzebnicki rynek.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======== SALON GIER ======== -->
+<section class="screen" id="screen-salon">
+  <header class="topbar">
+    <button class="btn-back" data-go="screen-hub" aria-label="Powrót">&#8592;</button>
+    <h2>Salon Gier</h2>
+    <div class="salon-head-star" aria-hidden="true">★</div>
+  </header>
+
+  <div class="salon-intro">
+    <span class="salon-kicker">WYBIERZ GRĘ</span>
+    <h3>W co bawimy się dzisiaj?</h3>
+    <p>Każda gra to nowa przygoda Dalii.</p>
+  </div>
+
+  <div class="salon-grid">
+    <button class="salon-card salon-walk" data-go="screen-spacer">
+      <span class="salon-ico"><svg viewBox="0 0 100 100"><use href="#i-nav-walk"/></svg></span>
+      <span class="salon-copy">
+        <strong>Spacer</strong>
+        <small>Zbieraj smaczki i omijaj przeszkody</small>
+      </span>
+      <span class="salon-play">GRAJ</span>
+    </button>
+
+    <button class="salon-card salon-memory" data-go="screen-memory">
+      <span class="salon-ico"><svg viewBox="0 0 100 100"><use href="#i-nav-memory"/></svg></span>
+      <span class="salon-copy">
+        <strong>Memory</strong>
+        <small>Produkty, wspomnienia i Dalia — 10 par</small>
+      </span>
+      <span class="salon-play">GRAJ</span>
+    </button>
+
+    <button class="salon-card salon-platform" data-go="screen-platform">
+      <span class="salon-ico"><img class="salon-dog salon-runner" src="assets/img/dalia/platform-run.png" alt=""></span>
+      <span class="salon-copy">
+        <strong>Dalia Skacze</strong>
+        <small>Platformy, przepaście i kości</small>
+      </span>
+      <span class="salon-play">GRAJ</span>
+    </button>
+
+    <button class="salon-card salon-flappy" data-go="screen-flappy">
+      <span class="salon-ico"><img class="salon-dog" src="assets/img/dalia/jetpack.png" alt=""></span>
+      <span class="salon-copy">
+        <strong>Flappy Dalia</strong>
+        <small>Leć między przeszkodami</small>
+      </span>
+      <span class="salon-play">GRAJ</span>
+    </button>
+  </div>
+</section>
+
+<!-- ======== DALIA SKACZE ======== -->
+<section class="screen" id="screen-platform">
+  <header class="topbar platform-topbar">
+    <button class="btn-back" data-go="screen-salon" aria-label="Powrót do Salonu Gier">&#8592;</button>
+    <h2>Dalia Skacze</h2>
+    <div class="platform-hud">
+      <span class="chip platform-bones" aria-label="Zebrane kości">🦴 <b id="platform-bones">0</b></span>
+      <span class="chip platform-score">Wynik: <b id="platform-score">0</b></span>
+    </div>
+  </header>
+
+  <div class="platform-wrap">
+    <canvas id="platform-canvas" aria-label="Gra Dalia Skacze"></canvas>
+    <div class="platform-dog-sprite" id="platform-dog-sprite" aria-hidden="true">
+      <img class="platform-dog-run" src="assets/img/dalia/platform-run.webp" alt="">
+      <img class="platform-dog-jump" src="assets/img/dalia/platform-jump.png" alt="">
+    </div>
+    <button class="platform-jump-btn hidden" id="btn-platform-jump" aria-label="Skok">
+      <span>↑</span> SKOK
+    </button>
+
+    <div class="overlay platform-overlay" id="platform-start">
+      <img src="assets/img/dalia/platform-run.png" alt="Dalia biegnie">
+      <span class="platform-kicker">PRZYGODA W PARKU</span>
+      <h3>Gotowa do biegu?</h3>
+      <p>Przeskakuj nad przepaściami<br>i zbieraj kości po drodze.</p>
+      <p class="platform-controls">Dotknij ekranu lub użyj <b>spacji</b> / <b>↑</b></p>
+      <p class="platform-record">Rekord: <b id="platform-best-start">0</b></p>
+      <button class="btn btn-primary" id="btn-platform-go">Biegniemy!</button>
+      <button class="btn btn-ghost" data-go="screen-salon">Do Salonu Gier</button>
+    </div>
+
+    <div class="overlay platform-overlay hidden" id="platform-over">
+      <img src="assets/img/dalia/platform-jump.png" alt="">
+      <span class="platform-kicker">KONIEC BIEGU</span>
+      <h3>Ojej, przepaść!</h3>
+      <p>Wynik: <b id="platform-final">0</b> &middot; Kości: <b id="platform-final-bones">0</b></p>
+      <p class="platform-record">Rekord: <b id="platform-best">0</b></p>
+      <button class="btn btn-primary" id="btn-platform-again">Jeszcze raz</button>
+      <button class="btn btn-ghost" data-go="screen-salon">Do Salonu Gier</button>
+    </div>
+  </div>
+</section>
+
+<!-- ======== SPACER (snake) ======== -->
+<section class="screen" id="screen-spacer">
+  <header class="topbar spacer-topbar">
+    <button class="btn-back" data-go="screen-salon" aria-label="Powrót do Salonu Gier">&#8592;</button>
+    <div class="spacer-heading">
+      <h2>Spacer</h2>
+      <span>Parkowa przygoda</span>
+    </div>
+    <div class="chip chip-treats spacer-wallet" aria-label="Wszystkie smaczki">
+      <svg viewBox="0 0 100 60"><use href="#i-treat"/></svg>
+      <span id="treats-spacer">0</span>
+    </div>
+  </header>
+
+  <div class="spacer-wrap">
+    <canvas id="spacer-canvas" aria-label="Gra Spacer: prowadź Dalię, zbieraj kości i omijaj przeszkody"></canvas>
+
+    <div class="spacer-game-hud" aria-live="polite">
+      <div class="spacer-stat spacer-score">
+        <span class="spacer-stat-icon" aria-hidden="true">🦴</span>
+        <span><small>SMACZKI</small><b id="spacer-run-score">0</b></span>
+      </div>
+      <div class="spacer-stat spacer-level">
+        <span class="spacer-stat-icon" aria-hidden="true">🍃</span>
+        <span><small>POZIOM</small><b id="spacer-level">1</b></span>
+      </div>
+      <button class="spacer-pause-btn hidden" id="btn-spacer-pause" aria-label="Wstrzymaj grę">Ⅱ</button>
+    </div>
+
+    <div class="spacer-hint hide" id="spacer-hint">
+      <span aria-hidden="true">↔</span> Przesuwaj palcem lub użyj strzałek
+    </div>
+
+    <div class="overlay spacer-overlay" id="spacer-start">
+      <img src="assets/img/dalia/jump.png" alt="Dalia gotowa na spacer">
+      <span class="spacer-kicker">NOWA PARKOWA TRASA</span>
+      <h3>Chodźmy na spacer!</h3>
+      <p>Zbieraj kości i prowadź Dalię<br>między drzewami, ławkami i kałużami.</p>
+      <div class="spacer-record">🏆 Rekord: <b id="spacer-best">0</b></div>
+      <div class="spacer-controls"><span>PRZESUŃ</span> palcem &nbsp;·&nbsp; <span>STERUJ</span> strzałkami</div>
+      <button class="btn btn-primary" id="btn-spacer-go">Ruszamy!</button>
+      <button class="btn btn-ghost" data-go="screen-salon">Do Salonu Gier</button>
+    </div>
+
+    <div class="overlay spacer-overlay hidden" id="spacer-pause">
+      <div class="spacer-pause-mark" aria-hidden="true">Ⅱ</div>
+      <span class="spacer-kicker">CHWILA ODDECHU</span>
+      <h3>Spacer wstrzymany</h3>
+      <p>Dalia poczeka tutaj na Ciebie.</p>
+      <button class="btn btn-primary" id="btn-spacer-resume">Idziemy dalej</button>
+      <button class="btn btn-ghost" data-go="screen-salon">Do Salonu Gier</button>
+    </div>
+
+    <div class="overlay spacer-overlay hidden" id="spacer-over">
+      <img src="assets/img/dalia/alert.png" alt="Dalia po pełnym przygód spacerze">
+      <span class="spacer-kicker">KONIEC SPACERU</span>
+      <h3>Ale przygoda!</h3>
+      <p>Dalia zebrała <b id="spacer-score">0</b> kości</p>
+      <p class="gain">+<span id="spacer-gain">0</span> smaczków</p>
+      <div class="spacer-record">🏆 Rekord: <b id="spacer-best-over">0</b></div>
+      <button class="btn btn-primary" id="btn-spacer-again">Jeszcze raz</button>
+      <button class="btn btn-ghost" data-go="screen-salon">Do Salonu Gier</button>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FLAPPY DALIA ======== -->
+<section class="screen" id="screen-flappy">
+  <header class="topbar flappy-topbar">
+    <button class="btn-back" data-go="screen-salon" aria-label="Powrót do Salonu Gier">&#8592;</button>
+    <h2>Flappy Dalia</h2>
+    <div class="chip flappy-score-chip">Wynik: <span id="flappy-score">0</span></div>
+  </header>
+
+  <div class="flappy-wrap">
+    <canvas id="flappy-canvas" aria-label="Gra Flappy Dalia"></canvas>
+
+    <div class="overlay flappy-overlay" id="flappy-start">
+      <img src="assets/img/dalia/jetpack.png" alt="Dalia z jetpackiem">
+      <h3>Gotowa do lotu?</h3>
+      <p>Dotykaj ekranu albo naciskaj<br><b>spację</b> lub <b>strzałkę w górę</b>.</p>
+      <p class="flappy-record">Rekord: <b id="flappy-best-start">0</b></p>
+      <button class="btn btn-primary" id="btn-flappy-go">Start!</button>
+    </div>
+
+    <div class="overlay flappy-overlay hidden" id="flappy-over">
+      <img src="assets/img/dalia/jetpack.png" alt="">
+      <h3>Koniec lotu!</h3>
+      <p>Wynik: <b id="flappy-final">0</b></p>
+      <p class="flappy-record">Rekord: <b id="flappy-best">0</b></p>
+      <button class="btn btn-primary" id="btn-flappy-again">Jeszcze raz</button>
+      <button class="btn btn-ghost" data-go="screen-salon">Do Salonu Gier</button>
+    </div>
+  </div>
+</section>
+
+<!-- ======== PRZYMIERZALNIA ======== -->
+<section class="screen" id="screen-przy">
+  <header class="topbar">
+    <button class="btn-back" data-go="screen-hub" aria-label="Powrót">&#8592;</button>
+    <h2>Przymierzalnia</h2>
+    <button class="btn-icon" id="btn-gallery" aria-label="Galeria looków">
+      <svg viewBox="0 0 100 100"><rect x="16" y="16" width="30" height="30" rx="7" fill="#C9A177"/><rect x="54" y="16" width="30" height="30" rx="7" fill="#C9A177"/><rect x="16" y="54" width="30" height="30" rx="7" fill="#C9A177"/><rect x="54" y="54" width="30" height="30" rx="7" fill="#D96C5F"/></svg>
+    </button>
+  </header>
+
+  <div class="board-wrap">
+    <div class="board" id="lookboard">
+      <span class="board-tag">lookboard</span>
+      <div class="slot slot-hat" data-slot="hat"></div>
+      <div class="slot slot-glasses" data-slot="glasses"></div>
+      <div class="slot slot-top" data-slot="top"></div>
+      <div class="slot slot-bottom" data-slot="bottom"></div>
+      <div class="slot slot-acc" data-slot="acc"></div>
+    </div>
+
+    <button class="btn btn-primary btn-save" id="btn-save-look" disabled>Zapisz look</button>
+  </div>
+
+  <div class="tabs" id="przy-tabs"></div>
+  <div class="items-strip" id="items-strip"></div>
+
+  <!-- galeria -->
+  <div class="gallery-panel hidden" id="gallery-panel">
+    <div class="gallery-card">
+      <div class="gallery-head">
+        <h3>Galeria looków</h3>
+        <button class="btn-icon" id="btn-gallery-close">&#10005;</button>
+      </div>
+      <div class="gallery-list" id="gallery-list"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== MEMORY ======== -->
+<section class="screen" id="screen-memory">
+  <header class="topbar memory-topbar">
+    <button class="btn-back" data-go="screen-salon" aria-label="Powrót do Salonu Gier">&#8592;</button>
+    <h2>Memory</h2>
+    <div class="memory-hud">
+      <div class="chip chip-moves">Ruchy: <span id="mem-moves">0</span></div>
+      <div class="chip chip-best" id="memory-best">—</div>
+    </div>
+  </header>
+
+  <div class="mem-board">
+    <div class="mem-grid" id="mem-grid"></div>
+  </div>
+
+  <div class="overlay mem-overlay hidden" id="mem-over">
+    <img id="mem-face" src="assets/img/memory/featured/dalia-mokra.jpg" alt="Mokra Dalia">
+    <h3>Brawo!</h3>
+    <p>Wszystkie <b>10 par</b> dopasowane!</p>
+    <p>Ruchy: <b id="mem-final">0</b></p>
+    <p class="gain">+<span id="mem-gain">0</span> smaczków</p>
+    <button class="btn btn-primary" id="btn-mem-again">Jeszcze raz</button>
+    <button class="btn btn-ghost" data-go="screen-salon">Do Salonu Gier</button>
+  </div>
+</section>
+
+<!-- toast -->
+<div id="toast" class="toast"></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
